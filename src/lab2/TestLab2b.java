@@ -2,7 +2,7 @@ package lab2;
 
 import java.security.SecureRandom;
 
-public class TestLab2a {
+public class TestLab2b {
     private final static int STRLEN = 32;
     private final static int N = 30;
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -20,7 +20,7 @@ public class TestLab2a {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MyDictionary dict = new MyDictionary(N / 2);
+        MyDictionary2b dict = new MyDictionary2b(N / 2);
         String[] tableStr;
         String search_element;
         int j = 0;
@@ -63,6 +63,13 @@ public class TestLab2a {
             System.out.format("%1$2d: element %2$s (%3$02d), search result %4$s\n", i,
                     search_element, j, result != null ? "F" : "N");
         }
+        
+        // test resize
+        for (int i = 0; i < N / 2; i++) {
+            search_element = tableStr[i];
+            dict.del(search_element);
+        }
+        dict.printDictionary();
     }
 }
 

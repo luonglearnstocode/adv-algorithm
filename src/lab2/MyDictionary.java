@@ -5,7 +5,7 @@ package lab2;
  * @author Luong Nguyen
  */
 public class MyDictionary {
-    private static final int UPPER_LIMIT = 5;
+    private static final int UPPER_LIMIT = 5; // resize after size > n * UPPER_LIMIT
     
     private int n; // number of buckets
     private int size; // number of key-value pairs
@@ -32,6 +32,7 @@ public class MyDictionary {
     }
     
     public void put(Object item, String key) {
+//        System.out.println("Putting key " + key);
         if (size >= UPPER_LIMIT*n) 
             resize(nextPrime(n*2)); // ~ double the size of the table array, but stay as prime number
         
@@ -99,6 +100,7 @@ public class MyDictionary {
     }
     
     public void resize(int n) {
+        System.out.println("Resizing to size " + n);
         MyDictionary newDict = new MyDictionary(n);
 
         for (int i = 0; i < this.table.length; i++) {
