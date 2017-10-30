@@ -64,12 +64,19 @@ public class TestLab2b {
                     search_element, j, result != null ? "F" : "N");
         }
         
-        // test resize
+        // test resize 
         for (int i = 0; i < N / 2; i++) {
             search_element = tableStr[i];
             dict.del(search_element);
         }
         dict.printDictionary();
+        for (int i = N/4; i < 3*N/4; i++) {
+            j = i;
+            search_element = tableStr[i];
+            result = dict.get(search_element);
+            System.out.format("%1$2d: element %2$s (%3$02d), search result %4$s\n", i,
+                    search_element, j, result != null ? "F" : "N");
+        }
     }
 }
 
