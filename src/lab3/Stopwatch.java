@@ -98,6 +98,7 @@ public final class Stopwatch {
      * measure the execution time of test() method in Test interface
      */
     public void measure(Test method) {
+        method.setup();
         int oldPriority = Thread.currentThread().getPriority();
         
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
