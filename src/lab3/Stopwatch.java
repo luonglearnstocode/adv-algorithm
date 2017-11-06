@@ -98,13 +98,14 @@ public final class Stopwatch {
      * measure the execution time of test() method in Test interface
      */
     public void measure(Test method) {
-        method.setup();
         int oldPriority = Thread.currentThread().getPriority();
         
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         measurements.clear();        
         for (int i = 0; i < N+M; i++) {
+            method.setup();
             method.test();
+            method.setup();
             fStart = System.nanoTime();
             method.test();
             fStop = System.nanoTime();

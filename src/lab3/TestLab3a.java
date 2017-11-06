@@ -11,7 +11,7 @@ public class TestLab3a {
     private static final int STARTN = 1000;
     private static final int ENDN = 10000;
     private static final int INCN = 1000;
-    private static final String OUTPUTFILE = "lab3a.csv";
+    private static final String OUTPUTFILE = "lab3aReversed.csv";
     
     /*
     * Generate random alpha numeric string
@@ -57,8 +57,8 @@ public class TestLab3a {
     
     public static void main(String[] args) { 
         /*
-        * Test each sort class
-        */
+        ****************************************** Test each sort class
+        
         String[] array = new String[50];
         for (int i = 0; i < array.length; i++) {
             array[i] = generateString(32);
@@ -78,42 +78,44 @@ public class TestLab3a {
         javaSort.sort();
         System.out.println(isSorted(array));
         
+        **********************************************************/
         
-//        try {
-//            PrintWriter writer = new PrintWriter(OUTPUTFILE, "UTF-8");
-//
-//            System.out.println("Number of CPU cores " + Runtime.getRuntime().availableProcessors());
-//            writer.println("N;Linear;Binary");
-//            Stopwatch sw = new Stopwatch();
-//            Random randomGenerator = new Random();
-//
-//            for (int n = STARTN; n <= ENDN; n += INCN) {
-//                System.out.println("N: " + n);
-//                
-//                InsertionSort insertionSort = new InsertionSort();
-//                JavaSort javaSort = new JavaSort();
-//              
-//                String[] array = new String[n];
-//                for (int i = 0; i < array.length; i++) {
-//                    array[i] = generateString(32);
-//                } 
-//               
-//                insertionSort.setArray(array);
-//                javaSort.setArray(array);
-//                
-//                StringBuilder result = new StringBuilder(); 
-//                result.append(n);                
-//
-//                sw.measure(insertionSort); result.append(";"); sw.toValue(result);
-//                sw.measure(javaSort); result.append(";"); sw.toValue(result);
-//                
-//                writer.println(result.toString());
-////                writer.println(result.toString().replace(".",","));
-//            }
-//            
-//            writer.close();
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            PrintWriter writer = new PrintWriter(OUTPUTFILE, "UTF-8");
+
+            System.out.println("Number of CPU cores " + Runtime.getRuntime().availableProcessors());
+            writer.println("N;Java;Insertion");
+            Stopwatch sw = new Stopwatch();
+            Random randomGenerator = new Random();
+
+            for (int n = STARTN; n <= ENDN; n += INCN) {
+                System.out.println("N: " + n);
+                
+                InsertionSort insertionSort = new InsertionSort();
+                JavaSort javaSort = new JavaSort();
+              
+                String[] array = new String[n];
+                for (int i = 0; i < array.length; i++) {
+                    array[i] = generateString(32);
+                } 
+               
+                insertionSort.setArray(array);
+                javaSort.setArray(array);
+                
+                StringBuilder result = new StringBuilder(); 
+                result.append(n);                
+                
+                sw.measure(javaSort); result.append(";"); sw.toValue(result);
+                sw.measure(insertionSort); result.append(";"); sw.toValue(result);
+                
+                
+                writer.println(result.toString());
+//                writer.println(result.toString().replace(".",","));
+            }
+            
+            writer.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
