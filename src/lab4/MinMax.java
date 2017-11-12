@@ -47,12 +47,15 @@ public class MinMax {
     
     /*
     * T(2)  = 1
+    *
     * T(n)  = 2T(n/2) + 2 
     *       = 4T(n/4) + 4 + 2
     *       = 8T(n/8) + 8 + 4 + 2
     *       = ...
     *       = n/2 + (2^1 + 2^2 + ... + 2^(logn-1)) 
-    *       = n/2 + 2^logn - 2 = n/2 + n - 2 = 3n/2 - 2
+    *       = n/2 + 2^logn - 2 
+    *       = n/2 + n - 2 
+    *       = 3n/2 - 2
     */
     public int[] minmaxHelper(int lo, int hi) {
         if (hi == lo)

@@ -29,23 +29,7 @@ public class Lab4a {
     }
     private final static int N = 16;
     
-    public static void main(String[] args) {
-//        int max, min;
-        
-//        initTestSeq(N); printTestSeq();
-//        
-//        MinMax minmax = new MinMax(collection);
-//        minmax.minmax2();
-//        System.out.println("N = " + N);
-//        System.out.println("Brute Force minmax search");
-//        System.out.println("Min index " + minmax.getMin() + ", max index " + minmax.getMax());
-//        System.out.println("Number of comparisions " + minmax.getComparisons());
-//        minmax = new MinMax(collection);        
-//        minmax.minmax();
-//        System.out.println("Divide and Conquer minmax search");
-//        System.out.println("Min index " + minmax.getMin() + ", max index " + minmax.getMax());
-//        System.out.println("Number of comparisions " + minmax.getComparisons());
-        
+    public static void main(String[] args) {     
         try {
             PrintWriter writer = new PrintWriter(OUTPUTFILE, "UTF-8");
 

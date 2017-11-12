@@ -46,7 +46,7 @@ public class Bignum {
         Bignum r = new Bignum(to-from);
 
         for (int i = from; i < to; i++)
-            r.number[i-from] = number[i];
+            r.number[i - from] = number[i];
 
         return r;
     }
@@ -71,7 +71,7 @@ public class Bignum {
         if (carry > 0) {
             throw new Exception("Overflow in subtraction\n");
         }
-
+        System.out.println("sub " + y + " to " + this);
         return r;
     }
 
@@ -105,7 +105,7 @@ public class Bignum {
             r.number = Arrays.copyOf(r.number, r.number.length+1);
             r.number[r.number.length-1] = 1;
         }
-
+        System.out.println("add " + y + " to " + this);
         return r;
     }
 
@@ -113,7 +113,61 @@ public class Bignum {
     /* multiply two numbers (this * y) together using divide-and-conquer technique */
     public Bignum mulBigNum(Bignum y) throws Exception {
 		// you work is to be done here!!!
-        return null;
+        System.out.println("Multiply " + this + " vs " + y);
+        int cmp = number.length - y.number.length;
+        if (cmp > 0)
+            y.number = y.addZerosBefore(cmp);
+        else if (cmp < 0) {
+            number = addZerosBefore(Math.abs(cmp));
+        }
+        
+        int N = number.length;
+
+        if (N == 1) {
+            int result = number[0] * y.number[0];
+            return new Bignum(result + ""); // convert to String to get BigNum  
+        }
+        
+        N = (N % 2 == 0) ? N : N + 1; 
+        System.out.println("N = " + N);
+        Bignum b = selectBigNum(0, number.length / 2);
+        Bignum a = selectBigNum(number.length / 2, number.length);
+        Bignum d = y.selectBigNum(0, y.number.length / 2);
+        Bignum c = y.selectBigNum(y.number.length / 2, y.number.length);
+        System.out.println("a = " + a +
+                            " b = " + b +
+                            " c = " + c +
+                            " d = " + d);
+
+        
+        Bignum p1 = a.mulBigNum(c);
+        Bignum p2 = b.mulBigNum(d);
+        Bignum p3 = (a.addBigNum(b)).mulBigNum((c.addBigNum(d)));
+        System.out.println("p1 = " + p1 +
+                            " p2 = " + p2 +
+                            " p3 = " + p3);
+        
+        return p1.multiply10powerN(N).addBigNum( // p1*10^n + 
+                        ((p3.subBigNum(p1).subBigNum(p2)).multiply10powerN(N/2))) // (p3 - p1 - p2)*10^(n/2)
+                        .addBigNum(p2); // + p2
+    }
+    
+    public Bignum multiply10powerN(int n) {
+        System.out.println("Multiply " + this + " to 10^" + n);
+        Bignum r = new Bignum(number.length + n);
+        for (int i = 0; i < r.number.length; i++) {
+            r.number[i] = (i < n) ? 0 : number[i - n];
+        }
+        return r;
+    }
+    
+    public byte[] addZerosBefore(int n) {
+        System.out.println("Add " + n + " zeros to " + this);
+        byte[] arr = new byte[number.length + n];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = (i < number.length) ? number[i] : 0;
+        }
+        return arr;
     }
 
 
