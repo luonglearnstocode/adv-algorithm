@@ -27,7 +27,7 @@ public class Lab4b {
         int n;
         String s1, s2;
         try {
-            for (int i = 3; i < 4; i++) {
+            for (int i = 1; i < 20; i++) {
                 s1 = createTestNumber(i);
                 n1 = new Bignum(s1);
                 System.out.format("%1$30s * ", n1.toString());
