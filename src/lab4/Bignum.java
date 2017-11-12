@@ -135,6 +135,7 @@ public class Bignum {
 
         if (N == 1) {
             int result = number[0] * y.number[0];
+            mulCounter++;
             return new Bignum(result + ""); // convert to String to get BigNum  
         }
         
