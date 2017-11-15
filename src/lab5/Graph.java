@@ -51,7 +51,7 @@ public class Graph {
         // include also the end vertex
         return (n + 1);
     }
-    private final static String FILE = "H:/Metropolia/luennot/ADV_TIERA_Java/labs/lab05/dist/maze.grh";
+    private final static String FILE = "maze.grh";
     private final static int FROM = 0;
     private final static int TO = 15;
 
