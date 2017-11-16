@@ -1,26 +1,65 @@
 package lab5;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Luong Nguyen
  */
 public class Graph {
+    private List<Integer>[] adjList;
     
     /* tell how many nodes a graph has */
     public int nodes() {
-        return -1;
-        
+        return adjList.length;
     }
     
     /* read a graph from the file */
     public boolean readGraph(File file) {
-        return false;
+        try {
+            Scanner sc = new Scanner(file);
+            
+            int count = 0;
+            while (sc.hasNextLine()) {
+                count++;
+                sc.nextLine();
+            }
+
+            adjList = (LinkedList<Integer>[]) new LinkedList[count];
+            
+            sc = new Scanner(file);
+            for (int i = 0; i < count; i++) {
+                adjList[i] = new LinkedList<>();
+                String line = sc.nextLine();
+                String[] data = line.split(" ");
+                for (int j = 1; j < data.length; j++) {
+                    adjList[i].add(Integer.parseInt(data[j]));
+                }
+            }
+            
+            
+            return true;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
     
     /* print a graph */
     public void printGraph() {
+        for (int i = 0; i < adjList.length; i++) {
+            System.out.print(i + ":");
+            for (int j : adjList[i]) {
+                System.out.print(" " + j);
+            }
+            System.out.println("");
+        }
     }
     
     /* Depth First Search
@@ -64,16 +103,16 @@ public class Graph {
         System.out.println("Graph Adjacent list");
         g.readGraph(new File(FILE));
         g.printGraph();
-        boolean visited[] = new boolean[g.nodes()];
-        int pred[] = new int[g.nodes()];
-        g.dfs(FROM, visited, pred);
-        // then check if there is a solution by looking from the backwards to the start
-        int steps[] = new int[g.nodes()];
-        System.out.println("\nMaze solution from " + FROM + " to " + TO);;
-        int n = mazeSolution(FROM, TO, pred, steps);
-        for (int i = 0; i < n; i++) {
-            System.out.print(steps[i] + " ");
-        }
-        System.out.println();
+//        boolean visited[] = new boolean[g.nodes()];
+//        int pred[] = new int[g.nodes()];
+//        g.dfs(FROM, visited, pred);
+//        // then check if there is a solution by looking from the backwards to the start
+//        int steps[] = new int[g.nodes()];
+//        System.out.println("\nMaze solution from " + FROM + " to " + TO);;
+//        int n = mazeSolution(FROM, TO, pred, steps);
+//        for (int i = 0; i < n; i++) {
+//            System.out.print(steps[i] + " ");
+//        }
+//        System.out.println();
     }
 }
