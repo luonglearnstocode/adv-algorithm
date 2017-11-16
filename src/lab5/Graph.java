@@ -42,8 +42,7 @@ public class Graph {
                     adjList[i].add(Integer.parseInt(data[j]));
                 }
             }
-            
-            
+      
             return true;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +67,13 @@ public class Graph {
     * pred is an describing the search path
     */
     void dfs(int start, boolean visited[], int pred[]) {
-        
+        visited[start] = true;
+        for (Integer i : adjList[start]) {
+            if (!visited[i]) {
+                pred[i] = start;
+                dfs(i, visited, pred);
+            }
+        }
     }
     
     /* find a maze solution */
@@ -90,9 +95,10 @@ public class Graph {
         // include also the end vertex
         return (n + 1);
     }
+    
     private final static String FILE = "maze.grh";
-    private final static int FROM = 0;
-    private final static int TO = 15;
+    private final static int FROM = 3;
+    private final static int TO = 7;
 
     /**
      * @param args the command line arguments
@@ -103,16 +109,16 @@ public class Graph {
         System.out.println("Graph Adjacent list");
         g.readGraph(new File(FILE));
         g.printGraph();
-//        boolean visited[] = new boolean[g.nodes()];
-//        int pred[] = new int[g.nodes()];
-//        g.dfs(FROM, visited, pred);
-//        // then check if there is a solution by looking from the backwards to the start
-//        int steps[] = new int[g.nodes()];
-//        System.out.println("\nMaze solution from " + FROM + " to " + TO);;
-//        int n = mazeSolution(FROM, TO, pred, steps);
-//        for (int i = 0; i < n; i++) {
-//            System.out.print(steps[i] + " ");
-//        }
-//        System.out.println();
+        boolean visited[] = new boolean[g.nodes()];
+        int pred[] = new int[g.nodes()];
+        g.dfs(FROM, visited, pred);
+        // then check if there is a solution by looking from the backwards to the start
+        int steps[] = new int[g.nodes()];
+        System.out.println("\nMaze solution from " + FROM + " to " + TO);;
+        int n = mazeSolution(FROM, TO, pred, steps);
+        for (int i = 0; i < n; i++) {
+            System.out.print(steps[i] + " ");
+        }
+        System.out.println();
     }
 }
