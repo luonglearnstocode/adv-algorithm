@@ -45,9 +45,7 @@ public class Knapsack {
     } 
     
     public void bruteForce() {
-        System.out.println("################################\tBrute force");
-        long startTime = System.currentTimeMillis();
-        
+        System.out.println("################################\tBrute force");        
         String best = "";
         int weight = 0;
         int value = 0;
@@ -70,14 +68,10 @@ public class Knapsack {
                 best = bin;
             }
             if (i == half) {
-                long halfTime   = System.currentTimeMillis();
-                System.out.println("Half the search space enumerated so far: " + (halfTime-startTime) + " ms");  
+                System.out.println("Half the search space enumerated so far");  
             }
             
-        }
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println("Running time: " + totalTime + " ms");  
+        } 
         
         System.out.println("Solution: value =  " + value + " weight = " + weight);
         System.out.println("Items: " + best);
@@ -91,7 +85,6 @@ public class Knapsack {
     
     public void greedy() {
         System.out.println("################################\tGreedy");
-        long startTime = System.currentTimeMillis();
         Arrays.sort(items);
         output();
         int w = 0; int v = 0;
@@ -106,9 +99,6 @@ public class Knapsack {
                 break;
             } // could also go through the remaining items
         }
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println("Running time: " + totalTime + " ms");
         
         System.out.println("Solution: value =  " + v + " weight = " + w);
         System.out.println("Items: ");
@@ -120,20 +110,20 @@ public class Knapsack {
     
     public void greedyHeuristic() {
         System.out.println("################################\tGreedy heuristic");
-        long startTime = System.currentTimeMillis();
         Arrays.sort(items);
+        
         int best = 0; int weight = 0;
         ArrayList<Item> solution = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             ArrayList<Item> list = new ArrayList<>();
+            // put 1 item first to the knapsack
             Item item = items[i];
-            if (item.weight > capacity) continue;
-            
+            if (item.weight > capacity) continue;           
             list.add(item);
             int w = item.weight;
             int v = item.value;
             
-            // greedy on the remaining items
+            // run greedy on the remaining items
             for (int j = 0; j < N; j++) {
                 if (j != i) {
                     Item next = items[j];
@@ -141,20 +131,18 @@ public class Knapsack {
                         w += next.weight;
                         v += next.value;
                         list.add(next);
-                    } else { // until 1 doesn't fit, then halt
+                    } else { 
                         break;
                     }
                 }
             }
+            
             if (v > best) {
                 best = v;
                 weight = w;
                 solution = list;
             }
         }
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println("Running time: " + totalTime + " ms");
         
         System.out.println("Solution: value =  " + best + " weight = " + weight);
         System.out.println("Items: ");
@@ -164,7 +152,7 @@ public class Knapsack {
         System.out.println("");
     }
     
-    private final static String FILE = "inputLab6/hard200.txt";
+    private final static String FILE = "inputLab6/easy20.txt";
     
     public static void main(String[] args) {
         Knapsack ks = new Knapsack();
@@ -176,6 +164,8 @@ public class Knapsack {
         System.out.println("\t3. Greedy heuristic");
         Scanner sc = new Scanner(System.in);
         int alg = Integer.parseInt(sc.nextLine());
+        
+        long startTime = System.currentTimeMillis();
         switch (alg) {
             case 1:
                 ks.bruteForce();
@@ -187,7 +177,9 @@ public class Knapsack {
                 ks.greedyHeuristic();
                 break;
         }
-        
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Running time: " + totalTime + " ms");
     }
     
     public static class Item implements Comparable<Item> {
