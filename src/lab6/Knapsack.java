@@ -102,9 +102,9 @@ public class Knapsack {
                 w += item.weight;
                 v += item.value;
                 choosen.add(item);
-            } else {
+            } else { // until 1 doesn't fit, then halt
                 break;
-            }
+            } // could also go through the remaining items
         }
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
@@ -118,13 +118,75 @@ public class Knapsack {
         System.out.println("");
     }
     
-    private final static String FILE = "inputLab6/hard33.txt";
+    public void greedyHeuristic() {
+        System.out.println("################################\tGreedy heuristic");
+        long startTime = System.currentTimeMillis();
+        Arrays.sort(items);
+        int best = 0; int weight = 0;
+        ArrayList<Item> solution = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            ArrayList<Item> list = new ArrayList<>();
+            Item item = items[i];
+            if (item.weight > capacity) continue;
+            
+            list.add(item);
+            int w = item.weight;
+            int v = item.value;
+            
+            // greedy on the remaining items
+            for (int j = 0; j < N; j++) {
+                if (j != i) {
+                    Item next = items[j];
+                    if (w + next.weight <= capacity) {
+                        w += next.weight;
+                        v += next.value;
+                        list.add(next);
+                    } else { // until 1 doesn't fit, then halt
+                        break;
+                    }
+                }
+            }
+            if (v > best) {
+                best = v;
+                weight = w;
+                solution = list;
+            }
+        }
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Running time: " + totalTime + " ms");
+        
+        System.out.println("Solution: value =  " + best + " weight = " + weight);
+        System.out.println("Items: ");
+        for (Item item : solution) {
+            System.out.print(item + "    ");
+        }
+        System.out.println("");
+    }
+    
+    private final static String FILE = "inputLab6/hard200.txt";
     
     public static void main(String[] args) {
-        Knapsack bf = new Knapsack();
-        bf.output();
-//        bf.bruteForce();
-        bf.greedy();
+        Knapsack ks = new Knapsack();
+        ks.output();
+        
+        System.out.println("Which algorithm ?: ");
+        System.out.println("\t1. Brute force");
+        System.out.println("\t2. Greedy");
+        System.out.println("\t3. Greedy heuristic");
+        Scanner sc = new Scanner(System.in);
+        int alg = Integer.parseInt(sc.nextLine());
+        switch (alg) {
+            case 1:
+                ks.bruteForce();
+                break;
+            case 2:
+                ks.greedy();
+                break;
+            case 3:
+                ks.greedyHeuristic();
+                break;
+        }
         
     }
     
