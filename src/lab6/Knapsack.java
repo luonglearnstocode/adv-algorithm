@@ -11,9 +11,9 @@ import java.util.Scanner;
  * @author Luong Nguyen
  */
 public class Knapsack {
-    private int capacity;
+    private static int capacity;
     private int N;
-    private Item[] items;
+    private static Item[] items;
     
     public Knapsack() {
         input();
@@ -152,16 +152,62 @@ public class Knapsack {
         System.out.println("");
     }
     
-    private final static String FILE = "inputLab6/easy20.txt";
+    private final static String FILE = "inputLab6/hard33.txt";
     
-    public static void main(String[] args) {
+    public void bruteForceMultithread() throws InterruptedException {
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        int n = (int) Math.pow(2, N);
+        int part = n / nThreads;
+        ArrayList<BruteForceThread> threads = new ArrayList<>();
+        
+        for (int i = 0; i < nThreads; i++) {
+            int from = i * part;
+            int to = (i == (nThreads-1)) ? n :(i+1) * part;
+            threads.add(new BruteForceThread(from, to));
+//            System.out.println("from " + from + " to " + to);
+        }
+        
+        for (BruteForceThread t : threads) {
+            t.start();
+        }
+        
+        for (BruteForceThread t : threads) {
+            t.join();
+        }
+        
+        int value = 0;
+        int weight = 0;
+        String best = "";
+        for (BruteForceThread t : threads) {
+            if (t.value > value) {
+                value = t.value;
+                weight = t.weight;
+                best = t.best;
+            }
+        }
+        
+        System.out.println("Solution: value =  " + value + " weight = " + weight);
+        System.out.println("Items: " + best);
+        for (int j = 0; j < best.length(); j++) {
+            if (best.charAt(j) == '1') {
+                System.out.print(items[j] + "    ");
+            }
+        }
+        System.out.println("");
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
         Knapsack ks = new Knapsack();
         ks.output();
         
+        int nThreads = Runtime.getRuntime().availableProcessors();
+
         System.out.println("Which algorithm ?: ");
         System.out.println("\t1. Brute force");
         System.out.println("\t2. Greedy");
         System.out.println("\t3. Greedy heuristic");
+        System.out.println("\t4. Multithread brute force");
+        System.out.print("You select: ");
         Scanner sc = new Scanner(System.in);
         int alg = Integer.parseInt(sc.nextLine());
         
@@ -176,10 +222,51 @@ public class Knapsack {
             case 3:
                 ks.greedyHeuristic();
                 break;
+            case 4:
+                ks.bruteForceMultithread();
+                break;
         }
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         System.out.println("Running time: " + totalTime + " ms");
+    }
+    
+    public static class BruteForceThread extends Thread {
+        int from;
+        int to;
+        int value;
+        int weight;
+        String best;
+        
+        public BruteForceThread(int from, int to) {
+            this.from = from;
+            this.to = to;
+            value = 0;
+            weight = 0;
+            best = "";
+        }
+        
+        @Override
+        public void run() {
+            for (int i = from; i < to; i++) {
+                String bin = Integer.toBinaryString(i);
+                int len = bin.length();
+                int w = 0;
+                int v = 0;
+                for (int j = 0; j < len; j++) {
+                    if (bin.charAt(j) == '1') {
+                        w += items[j].weight;
+                        v += items[j].value;
+                    }
+                }
+                if (w < capacity && v > value) {
+                    weight = w;
+                    value = v;
+                    best = bin;
+                } 
+            } 
+        }
+        
     }
     
     public static class Item implements Comparable<Item> {
