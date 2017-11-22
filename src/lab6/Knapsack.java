@@ -102,6 +102,8 @@ public class Knapsack {
                 w += item.weight;
                 v += item.value;
                 choosen.add(item);
+            } else {
+                break;
             }
         }
         long endTime   = System.currentTimeMillis();
@@ -116,12 +118,12 @@ public class Knapsack {
         System.out.println("");
     }
     
-    private final static String FILE = "inputLab6/easy20.txt";
+    private final static String FILE = "inputLab6/hard33.txt";
     
     public static void main(String[] args) {
         Knapsack bf = new Knapsack();
         bf.output();
-        bf.bruteForce();
+//        bf.bruteForce();
         bf.greedy();
         
     }
