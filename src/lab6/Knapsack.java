@@ -2,6 +2,8 @@ package lab6;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -36,11 +38,9 @@ public class Knapsack {
     }
     
     public void output() {
-        System.out.println("Capacity: " + capacity);
-        System.out.format("%20s%10s%n", "Value", "Weight");
-        
+        System.out.println("Capacity: " + capacity);  
         for (int i = 0; i < N; i++) {
-            System.out.format("%10d%10d%10d%n", i+1, items[i].value, items[i].weight);
+            System.out.println("\t" + items[i]);
         }
     } 
     
@@ -83,14 +83,37 @@ public class Knapsack {
         System.out.println("Items: " + best);
         for (int j = 0; j < best.length(); j++) {
             if (best.charAt(j) == '1') {
-                System.out.print(items[j] + "\t");
+                System.out.print(items[j] + "    ");
             }
         }
         System.out.println("");
     }
     
     public void greedy() {
+        System.out.println("################################\tGreedy");
+        long startTime = System.currentTimeMillis();
+        Arrays.sort(items);
+        output();
+        int w = 0; int v = 0;
+        ArrayList<Item> choosen = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            Item item = items[i];
+            if (w + item.weight <= capacity) {
+                w += item.weight;
+                v += item.value;
+                choosen.add(item);
+            }
+        }
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Running time: " + totalTime + " ms");
         
+        System.out.println("Solution: value =  " + v + " weight = " + w);
+        System.out.println("Items: ");
+        for (Item item : choosen) {
+            System.out.print(item + "    ");
+        }
+        System.out.println("");
     }
     
     private final static String FILE = "inputLab6/easy20.txt";
@@ -99,7 +122,7 @@ public class Knapsack {
         Knapsack bf = new Knapsack();
         bf.output();
         bf.bruteForce();
-           
+        bf.greedy();
         
     }
     
@@ -118,15 +141,15 @@ public class Knapsack {
         public int compareTo(Item o) {
             double cmp = 1.0*this.value / this.weight - 1.0*o.value / o.weight;
             if (cmp > 0) 
-                return 1;
-            else if (cmp < 0) 
                 return -1;
+            else if (cmp < 0) 
+                return 1;
             else
                 return 0;
         }
         
         public String toString() {
-            return number + " (" + value + ", " + weight + ")";
+            return "No." + number + " (" + value + ", " + weight + ")";
         }
     }
 }
