@@ -10,15 +10,11 @@ import java.util.Scanner;
  */
 public class Knapsack {
     private int capacity;
-    private int weight;
-    private int value;
     private int N;
     private int[] values;
     private int[] weights;
     
     public Knapsack() {
-        weight = 0;
-        value = 0;
         input();
     }
     
@@ -51,9 +47,13 @@ public class Knapsack {
         }
     } 
     
-    public String bruteForce() {
+    public void bruteForce() {
+        System.out.println("################################    Brute force");
         long startTime = System.currentTimeMillis();
+        
         String best = "";
+        int weight = 0;
+        int value = 0;
         int n = (int) Math.pow(2, N);
         int half = n/2;
         for (int i = 0; i < n; i++) {
@@ -81,7 +81,14 @@ public class Knapsack {
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         System.out.println("Running time: " + totalTime + " ms");  
-        return best;
+        
+        System.out.println("Solution: value =  " + value + " weight = " + weight);
+        System.out.println("Items: " + best);
+        for (int j = 0; j < best.length(); j++) {
+            if (best.charAt(j) == '1') {
+                System.out.format("%6d(%d,%d)", j+1, values[j], weights[j]);
+            }
+        }
     }
     
     private final static String FILE = "inputLab6/easy20.txt";
@@ -89,15 +96,8 @@ public class Knapsack {
     public static void main(String[] args) {
         Knapsack bf = new Knapsack();
         bf.output();
-        
-        String best = bf.bruteForce();
-        System.out.println("Total value: " + bf.value + " Weight: " + bf.weight);
-        System.out.println("Items: " + best);
-        for (int j = 0; j < best.length(); j++) {
-            if (best.charAt(j) == '1') {
-                System.out.format("%6d(%d,%d)", j+1, bf.values[j], bf.weights[j]);
-            }
-        }
+        bf.bruteForce();
+           
         
     }
 }
