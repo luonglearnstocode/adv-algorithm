@@ -204,6 +204,16 @@ public class Knapsack {
         
     }
     
+    public int recurse(int i, int c) {
+        if (c == 0 || i == N) return 0; // base case
+        
+        Item item = items[i];
+        
+        return (item.weight > c) ? recurse(i + 1, c) // if item's weight is more than capacity, cannot take it
+                                : Math.max(item.value + recurse(i + 1, c - item.weight), // take items[i]
+                                           recurse(i + 1, c));                           // not take items[i]
+    }
+    
     public int dynamic(int i, int c) {
         if (c == 0 || i == N) return 0; // base case
         if (memo[i][c] != 0) return memo[i][c]; // don't have to calculate again
@@ -225,7 +235,7 @@ public class Knapsack {
         }
         return memo[i][c];
     }
-    
+        
     public void dynamic() {
         System.out.println("################################\tDynamic Programming");
         int solution = dynamic(0, capacity);
@@ -243,7 +253,9 @@ public class Knapsack {
     }
     
 //    private final static String FILE = "inputLab6/easy20.txt";
-    private final static String FILE = "inputLab6/hard33.txt";
+    private final static String FILE = "inputLab6/easy200.txt";
+//    private final static String FILE = "inputLab6/hard33.txt";
+//    private final static String FILE = "inputLab6/hard200.txt";
     
     public static void main(String[] args) throws InterruptedException {
         Knapsack ks = new Knapsack();
@@ -254,7 +266,8 @@ public class Knapsack {
         System.out.println("\t2. Greedy");
         System.out.println("\t3. Greedy heuristic");
         System.out.println("\t4. Multithread brute force");
-        System.out.println("\t5. Dynamic programming");
+        System.out.println("\t5. Recursive");
+        System.out.println("\t6. Dynamic programming");
         System.out.print("You select: ");
         Scanner sc = new Scanner(System.in);
         int alg = Integer.parseInt(sc.nextLine());
@@ -274,6 +287,11 @@ public class Knapsack {
                 ks.bruteForceMultithread();
                 break;
             case 5:
+                System.out.println("################################\tRecurse");
+                int solution = ks.recurse(0, capacity);
+                System.out.println("Solution: " + solution);
+                break;
+            case 6:
                 ks.dynamic();
                 break;
         }
