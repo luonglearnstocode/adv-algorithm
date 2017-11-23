@@ -14,9 +14,11 @@ public class Knapsack {
     private static int capacity;
     private int N;
     private static Item[] items;
+    private int[][] memo;
     
     public Knapsack() {
         input();
+        memo = new int[N][capacity+1];
     }
     
     public boolean input() {
@@ -152,9 +154,8 @@ public class Knapsack {
         System.out.println("");
     }
     
-    private final static String FILE = "inputLab6/hard33.txt";
-    
     public void bruteForceMultithread() throws InterruptedException {
+        System.out.println("################################\tMultithread Brute force"); 
         int nThreads = Runtime.getRuntime().availableProcessors();
         int n = (int) Math.pow(2, N);
         int part = n / nThreads;
@@ -196,17 +197,31 @@ public class Knapsack {
         System.out.println("");
     }
     
+    public int dynamic(int i, int c) {
+        if (c == 0 || i == N) return 0; // base case
+        if (memo[i][c] != 0) return memo[i][c]; // don't have to calculate again
+        
+        Item item = items[i];
+        
+        memo[i][c] = (item.weight > c)  ? dynamic(i+1, c) // if item's weight is more than capacity, cannot include
+                                        : Math.max(item.value + dynamic(i + 1, c - item.weight), // take this item
+                                                    dynamic(i + 1, c)); // not take this item
+                
+        return memo[i][c];
+    }
+    
+    private final static String FILE = "inputLab6/hard33.txt";
+    
     public static void main(String[] args) throws InterruptedException {
         Knapsack ks = new Knapsack();
-        ks.output();
-        
-        int nThreads = Runtime.getRuntime().availableProcessors();
+        ks.output();      
 
         System.out.println("Which algorithm ?: ");
         System.out.println("\t1. Brute force");
         System.out.println("\t2. Greedy");
         System.out.println("\t3. Greedy heuristic");
         System.out.println("\t4. Multithread brute force");
+        System.out.println("\t5. Dynamic programming");
         System.out.print("You select: ");
         Scanner sc = new Scanner(System.in);
         int alg = Integer.parseInt(sc.nextLine());
@@ -224,6 +239,11 @@ public class Knapsack {
                 break;
             case 4:
                 ks.bruteForceMultithread();
+                break;
+            case 5:
+                System.out.println("################################\tDynamic Programming");
+                int solution = ks.dynamic(0, capacity);
+                System.out.println("Solution: " + solution);
                 break;
         }
         long endTime   = System.currentTimeMillis();
