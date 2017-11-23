@@ -53,21 +53,19 @@ public class Knapsack {
         String best = "";
         int weight = 0;
         int value = 0;
-        long n = (long) Math.pow(2, N);
+        long n = (long) Math.pow(2, N); // number of subsets
         long half = n/2;
-        for (long i = 0; i < n; i++) {
+        for (long i = 0; i < n; i++) { // for each subset 
             String bin = Long.toBinaryString(i);
-//            System.out.println(bin);
             int len = bin.length();
-            int w = 0;
-            int v = 0;
-            for (int j = 0; j < len; j++) {
+            int w = 0; int v = 0;
+            for (int j = 0; j < len; j++) { // get total value and weight 
                 if (bin.charAt(j) == '1') {
                     w += items[len-1-j].weight;
                     v += items[len-1-j].value;
                 }
             }
-            if (w <= capacity && v > value) {
+            if (w <= capacity && v > value) { // update solution
                 weight = w;
                 value = v;
                 best = bin;
@@ -90,7 +88,7 @@ public class Knapsack {
     
     public void greedy() {
         System.out.println("################################\tGreedy");
-        Arrays.sort(items);
+        Arrays.sort(items); // sort on value density in descending order
         output();
         int w = 0; int v = 0;
         ArrayList<Item> choosen = new ArrayList<>();
@@ -115,7 +113,7 @@ public class Knapsack {
     
     public void greedyHeuristic() {
         System.out.println("################################\tGreedy heuristic");
-        Arrays.sort(items);
+        Arrays.sort(items); // sort on value density in descending order
         
         int best = 0; int weight = 0;
         ArrayList<Item> solution = new ArrayList<>();
@@ -159,18 +157,15 @@ public class Knapsack {
     
     public void bruteForceMultithread() throws InterruptedException {
         System.out.println("################################\tMultithread Brute force"); 
-        int nThreads = Runtime.getRuntime().availableProcessors();
+        int nThreads = Runtime.getRuntime().availableProcessors(); // get number of effective threads can be created 
         long n = (long) Math.pow(2, N);
-        System.out.println(Math.pow(2, 33));
-        System.out.println("N = " + N + " n = " + n);
-        long part = n / nThreads;
-        ArrayList<BruteForceThread> threads = new ArrayList<>();
+        long part = n / nThreads; // number of subsets each thread will handle
         
+        ArrayList<BruteForceThread> threads = new ArrayList<>();
         for (int i = 0; i < nThreads; i++) {
             long from = i * part;
             long to = (i == (nThreads-1)) ? n :(i+1) * part;
             threads.add(new BruteForceThread(from, to));
-//            System.out.println("from " + from + " to " + to);
         }
         
         for (BruteForceThread t : threads) {
@@ -179,12 +174,12 @@ public class Knapsack {
         
         for (BruteForceThread t : threads) {
             t.join();
-        }
+        } // now all threads are finished
         
         int value = 0;
         int weight = 0;
         String best = "";
-        for (BruteForceThread t : threads) {
+        for (BruteForceThread t : threads) { // compare solutions from each thread
             System.out.println(t.from + " " + t.to + " : " + t.value + " " + t.best);
             if (t.value > value) {
                 value = t.value;
@@ -200,8 +195,7 @@ public class Knapsack {
                 System.out.print(items[best.length() - 1 - j] + "    ");
             }
         }
-        System.out.println("");
-        
+        System.out.println("");        
     }
     
     public int recurse(int i, int c) {
@@ -242,6 +236,7 @@ public class Knapsack {
             }
         }
         
+        // print out included items
         int w = 0; int v = 0;
         for (int i = 0; i < N; i++) {
             if (took[i]) {
@@ -255,9 +250,9 @@ public class Knapsack {
     }
     
 //    private final static String FILE = "inputLab6/easy4.txt"; // for testing backtracking of dynamic programming solution
-//    private final static String FILE = "inputLab6/easy20.txt";
+    private final static String FILE = "inputLab6/easy20.txt";
 //    private final static String FILE = "inputLab6/easy200.txt";
-    private final static String FILE = "inputLab6/hard33.txt";
+//    private final static String FILE = "inputLab6/hard33.txt";
 //    private final static String FILE = "inputLab6/hard200.txt";
     
     public static void main(String[] args) throws InterruptedException {
@@ -319,8 +314,7 @@ public class Knapsack {
         }
         
         @Override
-        public void run() {
-            System.out.println(Long.toBinaryString(to-1));
+        public void run() { // each thread find solution from the given subset
             for (long i = from; i < to; i++) {
                 String bin = Long.toBinaryString(i);
                 int len = bin.length();
