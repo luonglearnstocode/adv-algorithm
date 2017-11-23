@@ -15,10 +15,12 @@ public class Knapsack {
     private int N;
     private static Item[] items;
     private int[][] memo;
+    private boolean[] took;
     
     public Knapsack() {
         input();
         memo = new int[N][capacity+1];
+        took = new boolean[N];
     }
     
     public boolean input() {
@@ -51,20 +53,21 @@ public class Knapsack {
         String best = "";
         int weight = 0;
         int value = 0;
-        int n = (int) Math.pow(2, N);
-        int half = n/2;
-        for (int i = 0; i < n; i++) {
-            String bin = Integer.toBinaryString(i);
+        long n = (long) Math.pow(2, N);
+        long half = n/2;
+        for (long i = 0; i < n; i++) {
+            String bin = Long.toBinaryString(i);
+//            System.out.println(bin);
             int len = bin.length();
             int w = 0;
             int v = 0;
             for (int j = 0; j < len; j++) {
                 if (bin.charAt(j) == '1') {
-                    w += items[j].weight;
-                    v += items[j].value;
+                    w += items[len-1-j].weight;
+                    v += items[len-1-j].value;
                 }
             }
-            if (w < capacity && v > value) {
+            if (w <= capacity && v > value) {
                 weight = w;
                 value = v;
                 best = bin;
@@ -77,9 +80,9 @@ public class Knapsack {
         
         System.out.println("Solution: value =  " + value + " weight = " + weight);
         System.out.println("Items: " + best);
-        for (int j = 0; j < best.length(); j++) {
+        for (int j = best.length() - 1 ; j >= 0; j--) {
             if (best.charAt(j) == '1') {
-                System.out.print(items[j] + "    ");
+                System.out.print(items[best.length() - 1 - j] + "    ");
             }
         }
         System.out.println("");
@@ -157,13 +160,15 @@ public class Knapsack {
     public void bruteForceMultithread() throws InterruptedException {
         System.out.println("################################\tMultithread Brute force"); 
         int nThreads = Runtime.getRuntime().availableProcessors();
-        int n = (int) Math.pow(2, N);
-        int part = n / nThreads;
+        long n = (long) Math.pow(2, N);
+        System.out.println(Math.pow(2, 33));
+        System.out.println("N = " + N + " n = " + n);
+        long part = n / nThreads;
         ArrayList<BruteForceThread> threads = new ArrayList<>();
         
         for (int i = 0; i < nThreads; i++) {
-            int from = i * part;
-            int to = (i == (nThreads-1)) ? n :(i+1) * part;
+            long from = i * part;
+            long to = (i == (nThreads-1)) ? n :(i+1) * part;
             threads.add(new BruteForceThread(from, to));
 //            System.out.println("from " + from + " to " + to);
         }
@@ -180,6 +185,7 @@ public class Knapsack {
         int weight = 0;
         String best = "";
         for (BruteForceThread t : threads) {
+            System.out.println(t.from + " " + t.to + " : " + t.value + " " + t.best);
             if (t.value > value) {
                 value = t.value;
                 weight = t.weight;
@@ -189,12 +195,13 @@ public class Knapsack {
         
         System.out.println("Solution: value =  " + value + " weight = " + weight);
         System.out.println("Items: " + best);
-        for (int j = 0; j < best.length(); j++) {
+        for (int j = best.length() - 1 ; j >= 0; j--) {
             if (best.charAt(j) == '1') {
-                System.out.print(items[j] + "    ");
+                System.out.print(items[best.length() - 1 - j] + "    ");
             }
         }
         System.out.println("");
+        
     }
     
     public int dynamic(int i, int c) {
@@ -202,14 +209,40 @@ public class Knapsack {
         if (memo[i][c] != 0) return memo[i][c]; // don't have to calculate again
         
         Item item = items[i];
-        
-        memo[i][c] = (item.weight > c)  ? dynamic(i+1, c) // if item's weight is more than capacity, cannot include
-                                        : Math.max(item.value + dynamic(i + 1, c - item.weight), // take this item
-                                                    dynamic(i + 1, c)); // not take this item
-                
+        if (item.weight > c) { // if item's weight is more than capacity, cannot include
+            memo[i][c] = dynamic(i+1, c);
+//            took[i] = false;
+        } else {
+            int ifTake = item.value + dynamic(i + 1, c - item.weight);
+            int ifNot = dynamic(i + 1, c);
+            if (ifTake > ifNot) {
+//                System.out.println("i=" + i);
+                took[i] = true;
+                memo[i][c] = ifTake;
+            } else {
+                memo[i][c] = ifNot;
+            }
+        }
         return memo[i][c];
     }
     
+    public void dynamic() {
+        System.out.println("################################\tDynamic Programming");
+        int solution = dynamic(0, capacity);
+        
+        int w = 0; int v = 0;
+        for (int i = 0; i < N; i++) {
+            if (took[i]) {
+                v += items[i].value;
+                w += items[i].weight;
+                System.out.print(items[i] + "    ");
+            }
+        }
+        System.out.println("\n Value " + v);
+        System.out.println("Solution: value = " + solution + " weight = " + w);
+    }
+    
+//    private final static String FILE = "inputLab6/easy20.txt";
     private final static String FILE = "inputLab6/hard33.txt";
     
     public static void main(String[] args) throws InterruptedException {
@@ -241,9 +274,7 @@ public class Knapsack {
                 ks.bruteForceMultithread();
                 break;
             case 5:
-                System.out.println("################################\tDynamic Programming");
-                int solution = ks.dynamic(0, capacity);
-                System.out.println("Solution: " + solution);
+                ks.dynamic();
                 break;
         }
         long endTime   = System.currentTimeMillis();
@@ -252,13 +283,13 @@ public class Knapsack {
     }
     
     public static class BruteForceThread extends Thread {
-        int from;
-        int to;
+        long from;
+        long to;
         int value;
         int weight;
         String best;
         
-        public BruteForceThread(int from, int to) {
+        public BruteForceThread(long from, long to) {
             this.from = from;
             this.to = to;
             value = 0;
@@ -268,18 +299,20 @@ public class Knapsack {
         
         @Override
         public void run() {
-            for (int i = from; i < to; i++) {
-                String bin = Integer.toBinaryString(i);
+            System.out.println(Long.toBinaryString(to-1));
+            for (long i = from; i < to; i++) {
+                String bin = Long.toBinaryString(i);
                 int len = bin.length();
                 int w = 0;
                 int v = 0;
                 for (int j = 0; j < len; j++) {
                     if (bin.charAt(j) == '1') {
-                        w += items[j].weight;
-                        v += items[j].value;
+                        w += items[len-1-j].weight;
+                        v += items[len-1-j].value;
                     }
                 }
-                if (w < capacity && v > value) {
+
+                if (w <= capacity && v > value) {
                     weight = w;
                     value = v;
                     best = bin;
