@@ -19,7 +19,7 @@ public class Knapsack {
     
     public Knapsack() {
         input();
-        memo = new int[N][capacity+1];
+        memo = new int[N+1][capacity+1];
         took = new boolean[N];
     }
     
@@ -221,17 +221,10 @@ public class Knapsack {
         Item item = items[i];
         if (item.weight > c) { // if item's weight is more than capacity, cannot include
             memo[i][c] = dynamic(i+1, c);
-//            took[i] = false;
         } else {
             int ifTake = item.value + dynamic(i + 1, c - item.weight);
             int ifNot = dynamic(i + 1, c);
-            if (ifTake > ifNot) {
-//                System.out.println("i=" + i);
-                took[i] = true;
-                memo[i][c] = ifTake;
-            } else {
-                memo[i][c] = ifNot;
-            }
+            memo[i][c] = ifTake > ifNot ? ifTake : ifNot;
         }
         return memo[i][c];
     }
@@ -239,6 +232,15 @@ public class Knapsack {
     public void dynamic() {
         System.out.println("################################\tDynamic Programming");
         int solution = dynamic(0, capacity);
+        
+        // backtrack the solution to get items list
+        int j = capacity;
+        for (int i = 0; i < N; i++) {
+            if (memo[i][j] != memo[i+1][j]) { // means that items[i] is included
+                j -= items[i].weight;
+                took[i] = true;
+            }
+        }
         
         int w = 0; int v = 0;
         for (int i = 0; i < N; i++) {
@@ -248,13 +250,14 @@ public class Knapsack {
                 System.out.print(items[i] + "    ");
             }
         }
-        System.out.println("\n Value " + v);
-        System.out.println("Solution: value = " + solution + " weight = " + w);
+        
+        System.out.println("\nSolution: value = " + solution + " weight = " + w);
     }
     
+//    private final static String FILE = "inputLab6/easy4.txt"; // for testing backtracking of dynamic programming solution
 //    private final static String FILE = "inputLab6/easy20.txt";
-    private final static String FILE = "inputLab6/easy200.txt";
-//    private final static String FILE = "inputLab6/hard33.txt";
+//    private final static String FILE = "inputLab6/easy200.txt";
+    private final static String FILE = "inputLab6/hard33.txt";
 //    private final static String FILE = "inputLab6/hard200.txt";
     
     public static void main(String[] args) throws InterruptedException {
@@ -266,7 +269,7 @@ public class Knapsack {
         System.out.println("\t2. Greedy");
         System.out.println("\t3. Greedy heuristic");
         System.out.println("\t4. Multithread brute force");
-        System.out.println("\t5. Recursive");
+        System.out.println("\t5. Naive recurse");
         System.out.println("\t6. Dynamic programming");
         System.out.print("You select: ");
         Scanner sc = new Scanner(System.in);
@@ -287,7 +290,7 @@ public class Knapsack {
                 ks.bruteForceMultithread();
                 break;
             case 5:
-                System.out.println("################################\tRecurse");
+                System.out.println("################################\tNaive Recurse");
                 int solution = ks.recurse(0, capacity);
                 System.out.println("Solution: " + solution);
                 break;
