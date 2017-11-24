@@ -249,11 +249,11 @@ public class Knapsack {
         System.out.println("\nSolution: value = " + solution + " weight = " + w);
     }
     
-//    private final static String FILE = "inputLab6/easy4.txt"; // for testing backtracking of dynamic programming solution
-    private final static String FILE = "inputLab6/easy20.txt";
-//    private final static String FILE = "inputLab6/easy200.txt";
-//    private final static String FILE = "inputLab6/hard33.txt";
-//    private final static String FILE = "inputLab6/hard200.txt";
+//    private final static String FILE = "inputOutput/easy4.txt"; // for testing backtracking of dynamic programming solution
+    private final static String FILE = "inputOutput/easy20.txt";
+//    private final static String FILE = "inputOutput/easy200.txt";
+//    private final static String FILE = "inputOutput/hard33.txt";
+//    private final static String FILE = "inputOutput/hard200.txt";
     
     public static void main(String[] args) throws InterruptedException {
         Knapsack ks = new Knapsack();

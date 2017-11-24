@@ -7,7 +7,7 @@ public class Lab4a {
     private static final int STARTN = 100;
     private static final int ENDN = 1000;
     private static final int INCN = 100;
-    private static final String OUTPUTFILE = "lab4a.csv";
+    private static final String OUTPUTFILE = "inputOutput/lab4a.csv";
     static private Integer[] collection;
     static private SecureRandom rnd = new SecureRandom();
 

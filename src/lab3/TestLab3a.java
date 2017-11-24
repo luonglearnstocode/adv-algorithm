@@ -11,7 +11,7 @@ public class TestLab3a {
     private static final int STARTN = 1000;
     private static final int ENDN = 10000;
     private static final int INCN = 1000;
-    private static final String OUTPUTFILE = "lab3aReversed.csv";
+    private static final String OUTPUTFILE = "inputOutput/lab3aReversed.csv";
     
     /*
     * Generate random alpha numeric string

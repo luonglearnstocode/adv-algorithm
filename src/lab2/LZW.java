@@ -18,10 +18,10 @@ import java.util.Map;
  * @author Luong Nguyen
  */
 public class LZW {
-    final static String INPUT = "input2c.txt";  
-//    final static String INPUT = "input2cOther.txt"; 
-    final static String OUTPUT = "output2c.txt"; 
-    final static String OUTPUT2 = "decompressed.txt";
+    final static String INPUT = "inputOutput/input2c.txt";  
+//    final static String INPUT = "inputOutput/input2cOther.txt"; 
+    final static String OUTPUT = "inputOutput/output2c.txt"; 
+    final static String OUTPUT2 = "inputOutput/decompressed.txt";
     
     public static String readFile(String path) throws IOException{
         String content = new String(Files.readAllBytes(Paths.get(path))); 

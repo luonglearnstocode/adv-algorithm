@@ -85,7 +85,7 @@ public class MyNewSearch {
     private static final int STARTN = 10000;
     private static final int ENDN = 55000;
     private static final int INCN = 5000;
-    private static final String OUTPUTFILE = "lab1b.csv";
+    private static final String OUTPUTFILE = "inputOutput/lab1b.csv";
     
     /*
     * Generate random alpha numeric string

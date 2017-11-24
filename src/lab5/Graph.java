@@ -96,7 +96,7 @@ public class Graph {
         return (n + 1);
     }
     
-    private final static String FILE = "maze.grh";
+    private final static String FILE = "inputOutput/maze.grh";
     private final static int FROM = 3;
     private final static int TO = 7;
 

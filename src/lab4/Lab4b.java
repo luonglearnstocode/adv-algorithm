@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 public class Lab4b {
     static final String AB = "0123456789";
     static SecureRandom rnd = new SecureRandom();
-    private static final String OUTPUTFILE = "lab4b.csv";
+    private static final String OUTPUTFILE = "inputOutput/lab4b.csv";
 
     /* create a random string array with lenght of n */
     static String createTestNumber(int n) {
